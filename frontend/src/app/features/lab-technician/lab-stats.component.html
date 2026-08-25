@@ -1,0 +1,68 @@
+<h1>Lab Statistics</h1>
+
+@if (labTech.error()) {
+  <p class="error">{{ labTech.error() }}</p>
+}
+
+@if (labTech.stats(); as stats) {
+  <div class="stat-cards">
+    <div class="stat-card">
+      <span class="stat-value">{{ stats.orders.total }}</span>
+      <span class="stat-label">Total orders</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">{{ stats.tests.catalog_total }}</span>
+      <span class="stat-label">Tests in catalog</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">{{ stats.results.total }}</span>
+      <span class="stat-label">Results recorded</span>
+    </div>
+    <div class="stat-card warn">
+      <span class="stat-value">{{ stats.results.abnormal }}</span>
+      <span class="stat-label">Abnormal results</span>
+    </div>
+    <div class="stat-card danger">
+      <span class="stat-value">{{ stats.results.critical }}</span>
+      <span class="stat-label">Critical results</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">{{ stats.results.reviewed }}</span>
+      <span class="stat-label">Reviewed results</span>
+    </div>
+    @if (avgProcessingDays(); as avg) {
+      <div class="stat-card">
+        <span class="stat-value">{{ avg | number: '1.1-1' }}d</span>
+        <span class="stat-label">Avg. estimated processing time (catalog)</span>
+      </div>
+    }
+  </div>
+
+  <h2>Orders by Status</h2>
+  <div class="bars">
+    @for (entry of stats.orders.by_status | keyvalue; track entry.key) {
+      <div class="bar-row">
+        <span class="bar-label">{{ entry.key }}</span>
+        <div class="bar-track">
+          <div class="bar-fill" [style.width.%]="barWidth(entry.value, stats.orders.total)"></div>
+        </div>
+        <span class="bar-count">{{ entry.value }}</span>
+      </div>
+    }
+  </div>
+
+  <h2>Tests by Status</h2>
+  <div class="bars">
+    @for (entry of stats.tests.by_status | keyvalue; track entry.key) {
+      <div class="bar-row">
+        <span class="bar-label">{{ entry.key }}</span>
+        <div class="bar-track">
+          <div class="bar-fill tests" [style.width.%]="barWidth(entry.value, stats.orders.total)"></div>
+        </div>
+        <span class="bar-count">{{ entry.value }}</span>
+      </div>
+    }
+  </div>
+} @else {
+  <p>Loading statistics...</p>
+}

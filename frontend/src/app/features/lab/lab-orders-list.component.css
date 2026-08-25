@@ -1,0 +1,144 @@
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.new-order {
+  padding: 0.5rem 1rem;
+  background: #2563eb;
+  color: #fff;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.filters {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.filters button {
+  padding: 0.35rem 0.9rem;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+}
+
+.filters button.active {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+
+.error {
+  color: #dc2626;
+}
+
+.loading {
+  color: #64748b;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: top;
+}
+
+th {
+  color: #64748b;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.status,
+.priority {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-draft {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.status-placed {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.status-collected {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-processing {
+  background: #fde68a;
+  color: #92400e;
+}
+
+.status-completed {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.priority-routine {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.priority-stat {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.actions a {
+  color: #2563eb;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tr {
+    margin-bottom: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 0.5rem;
+  }
+
+  td {
+    border-bottom: none;
+    padding: 0.25rem 0.3rem;
+  }
+}

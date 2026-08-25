@@ -5,11 +5,12 @@ import { map } from 'rxjs';
 
 import { PatientService } from '../../core/services/patient.service';
 import { DocumentsPanelComponent } from '../documents/documents-panel.component';
+import { LabResultsPanelComponent } from '../lab/lab-results-panel.component';
 
 @Component({
   selector: 'app-patient-details',
   standalone: true,
-  imports: [RouterLink, DocumentsPanelComponent],
+  imports: [RouterLink, DocumentsPanelComponent, LabResultsPanelComponent],
   templateUrl: './patient-details.component.html',
   styleUrl: './patient-details.component.css',
 })

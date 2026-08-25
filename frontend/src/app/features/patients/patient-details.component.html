@@ -49,6 +49,14 @@
     <app-documents-panel [patientId]="patient.PatientId" />
   </section>
 
+  <section>
+    <div class="section-header">
+      <h2>Lab Results</h2>
+      <a [routerLink]="['/lab/orders/new']" [queryParams]="{ patientId: patient.PatientId }">+ Order labs</a>
+    </div>
+    <app-lab-results-panel [patientId]="patient.PatientId" />
+  </section>
+
   <a class="new-referral" [routerLink]="['/referrals/new']" [queryParams]="{ patientId: patient.PatientId }">
     + Create referral for {{ patient.Name }}
   </a>

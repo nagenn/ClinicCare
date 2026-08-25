@@ -1,0 +1,56 @@
+<h1>Lab Test Catalog</h1>
+
+<div class="filter-row">
+  <label>
+    Specialty
+    <select name="specialty" [(ngModel)]="specialtyFilter" (ngModelChange)="applyFilter()">
+      <option value="">All specialties</option>
+      @for (s of specialties(); track s) {
+        <option [value]="s">{{ s }}</option>
+      }
+    </select>
+  </label>
+</div>
+
+@if (labService.error()) {
+  <p class="error">{{ labService.error() }}</p>
+}
+
+@if (labService.loading()) {
+  <p class="loading">Loading test catalog…</p>
+} @else {
+  <table>
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Specialty</th>
+        <th>Sample</th>
+        <th>Normal Range</th>
+        <th>Processing Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (t of labService.tests(); track t.test_id) {
+        <tr>
+          <td>{{ t.test_code }}</td>
+          <td>{{ t.test_name }}</td>
+          <td>{{ t.specialty }}</td>
+          <td>{{ t.sample_type }}</td>
+          <td>
+            @if (t.normal_range_min != null || t.normal_range_max != null) {
+              {{ t.normal_range_min ?? '?' }} – {{ t.normal_range_max ?? '?' }} {{ t.unit }}
+            } @else {
+              —
+            }
+          </td>
+          <td>{{ t.processing_time_days }} day(s)</td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="6">No tests found.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

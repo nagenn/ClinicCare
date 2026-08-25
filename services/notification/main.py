@@ -37,10 +37,12 @@ def create_notification(payload: schemas.NotificationCreate, db: Session = Depen
         ReferralId=payload.ReferralId,
         EventType=payload.EventType.value,
         Message=payload.Message,
+        Source=payload.Source,
         Timestamp=datetime.utcnow(),
     )
     db.add(notification)
     db.commit()
     db.refresh(notification)
-    print(f"[notification] Referral #{notification.ReferralId} -> {notification.EventType}: {notification.Message}")
+    referral_label = f"Referral #{notification.ReferralId}" if notification.ReferralId is not None else (notification.Source or "unknown source")
+    print(f"[notification] {referral_label} -> {notification.EventType}: {notification.Message}")
     return notification

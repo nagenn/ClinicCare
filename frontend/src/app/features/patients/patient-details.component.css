@@ -31,3 +31,19 @@ section h2 {
   margin-top: 1rem;
   color: #2563eb;
 }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.section-header h2 {
+  margin-bottom: 0;
+}
+
+.section-header a {
+  color: #2563eb;
+  font-size: 0.85rem;
+}

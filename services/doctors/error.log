@@ -1,0 +1,7 @@
+C:\Users\Administrator\Documents\PE_Training\ClinicCare\services\doctors\main.py:16: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("startup")

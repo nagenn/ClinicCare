@@ -1,0 +1,66 @@
+<div class="modal-backdrop" (click)="close()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h2>Enter Result — {{ orderTest.test.test_name }}</h2>
+    <p class="subtitle">
+      Order #{{ order.order_id }} · {{ patientName ?? ('Patient #' + order.patient_id) }} · {{ orderTest.test.test_code }}
+    </p>
+
+    @if (orderTest.test.normal_range_min !== null && orderTest.test.normal_range_max !== null) {
+      <p class="range">
+        Reference range: {{ orderTest.test.normal_range_min }}–{{ orderTest.test.normal_range_max }}
+        {{ orderTest.test.unit }}
+      </p>
+    } @else {
+      <p class="range">Qualitative test — no numeric reference range.</p>
+    }
+
+    @if (formError()) {
+      <p class="error">{{ formError() }}</p>
+    }
+
+    <label>
+      Result value
+      <input
+        [type]="isNumericTest() ? 'number' : 'text'"
+        step="any"
+        [ngModel]="resultValue()"
+        (ngModelChange)="resultValue.set($event)"
+        placeholder="Enter result..."
+      />
+    </label>
+
+    @if (isNumericTest()) {
+      <p class="preview preview-{{ preview() }}">
+        @switch (preview()) {
+          @case ('normal') { Within normal range }
+          @case ('abnormal') { Outside normal range — will be flagged abnormal }
+          @case ('critical') { Significantly outside range — will be flagged critical }
+          @default { Enter a numeric value to preview flags }
+        }
+      </p>
+    } @else {
+      <div class="flag-checks">
+        <label class="checkbox">
+          <input type="checkbox" [ngModel]="manualAbnormal()" (ngModelChange)="manualAbnormal.set($event)" />
+          Mark as abnormal
+        </label>
+        <label class="checkbox">
+          <input type="checkbox" [ngModel]="manualCritical()" (ngModelChange)="manualCritical.set($event)" />
+          Mark as critical
+        </label>
+      </div>
+    }
+
+    <label>
+      Notes
+      <textarea rows="3" [ngModel]="notes()" (ngModelChange)="notes.set($event)" placeholder="Optional notes..."></textarea>
+    </label>
+
+    <div class="modal-actions">
+      <button type="button" class="secondary" (click)="close()">Cancel</button>
+      <button type="button" [disabled]="submitting()" (click)="submit()">
+        {{ submitting() ? 'Submitting...' : 'Submit Result' }}
+      </button>
+    </div>
+  </div>
+</div>

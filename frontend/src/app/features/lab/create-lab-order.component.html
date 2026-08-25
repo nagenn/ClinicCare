@@ -1,0 +1,151 @@
+<h1>New Lab Order</h1>
+
+<ol class="stepper">
+  @for (s of steps; track s.step) {
+    <li [class.active]="currentStep() === s.step" [class.done]="currentStep() > s.step">
+      <span class="dot">{{ s.step }}</span>
+      <span class="label">{{ s.label }}</span>
+    </li>
+  }
+</ol>
+
+@if (errorMessage()) {
+  <p class="error">{{ errorMessage() }}</p>
+}
+
+<form (ngSubmit)="submit()" #f="ngForm">
+  @if (currentStep() === 1) {
+    <section class="step">
+      <h2>Step 1: Select Patient</h2>
+      <label>
+        Patient
+        <select name="patientId" [(ngModel)]="form.patientId" required>
+          <option [value]="0" disabled>Select a patient...</option>
+          @for (p of patientService.patients(); track p.PatientId) {
+            <option [value]="p.PatientId">{{ p.Name }}</option>
+          }
+        </select>
+      </label>
+      <div class="nav">
+        <button type="button" [disabled]="!canProceedFromStep1()" (click)="next()">Next</button>
+      </div>
+    </section>
+  }
+
+  @if (currentStep() === 2) {
+    <section class="step">
+      <h2>Step 2: Select Referral</h2>
+      <label class="checkbox">
+        <input type="checkbox" name="standalone" [(ngModel)]="standaloneOrder" [ngModelOptions]="{standalone: true}" />
+        This is a standalone order (not tied to a referral)
+      </label>
+      @if (!standaloneOrder()) {
+        <label>
+          Referral
+          <select name="referralId" [(ngModel)]="form.referralId">
+            <option [value]="0" disabled>Select a referral...</option>
+            @for (r of referralService.referrals(); track r.ReferralId) {
+              <option [value]="r.ReferralId">Referral #{{ r.ReferralId }} — {{ r.Reason }}</option>
+            }
+          </select>
+          @if (!referralService.referrals().length) {
+            <p class="hint">No referrals found for this patient. Check "standalone order" to continue without one.</p>
+          }
+        </label>
+      }
+      <div class="nav">
+        <button type="button" (click)="back()">Back</button>
+        <button type="button" (click)="next()">Next</button>
+      </div>
+    </section>
+  }
+
+  @if (currentStep() === 3) {
+    <section class="step">
+      <h2>Step 3: Select Tests</h2>
+      <div class="test-grid">
+        @for (t of labService.tests(); track t.test_id) {
+          <label class="test-item">
+            <input
+              type="checkbox"
+              [checked]="isTestSelected(t.test_id)"
+              (change)="toggleTest(t.test_id)"
+            />
+            <span class="test-name">{{ t.test_name }} ({{ t.test_code }})</span>
+            <span class="test-meta">{{ t.specialty }} &middot; {{ t.sample_type }}</span>
+          </label>
+        } @empty {
+          <p>Loading test catalog…</p>
+        }
+      </div>
+      <p class="hint">{{ selectedTestIds().size }} test(s) selected.</p>
+      <div class="nav">
+        <button type="button" (click)="back()">Back</button>
+        <button type="button" [disabled]="!canProceedFromStep3()" (click)="next()">Next</button>
+      </div>
+    </section>
+  }
+
+  @if (currentStep() === 4) {
+    <section class="step">
+      <h2>Step 4: Priority &amp; Clinical Indication</h2>
+      <label>
+        Ordering Doctor
+        <select name="orderedBy" [(ngModel)]="form.orderedBy" required>
+          <option [value]="0" disabled>Select ordering doctor...</option>
+          @for (d of doctorService.doctors(); track d.DoctorId) {
+            <option [value]="d.DoctorId">{{ d.Name }} ({{ d.Specialty }})</option>
+          }
+        </select>
+      </label>
+      <label>
+        Priority
+        <select name="priority" [(ngModel)]="form.priority" required>
+          @for (p of priorities; track p) {
+            <option [value]="p">{{ p }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Clinical Indication
+        <textarea name="clinicalIndication" [(ngModel)]="form.clinicalIndication" rows="3"></textarea>
+      </label>
+      <div class="nav">
+        <button type="button" (click)="back()">Back</button>
+        <button type="button" [disabled]="!canProceedFromStep4()" (click)="next()">Next</button>
+      </div>
+    </section>
+  }
+
+  @if (currentStep() === 5) {
+    <section class="step">
+      <h2>Step 5: Review &amp; Submit</h2>
+      <dl class="review">
+        <dt>Patient</dt>
+        <dd>{{ patientName() }}</dd>
+        <dt>Referral</dt>
+        <dd>{{ standaloneOrder() || !form.referralId ? 'Standalone order' : 'Referral #' + form.referralId }}</dd>
+        <dt>Tests</dt>
+        <dd>
+          <ul>
+            @for (t of selectedTests(); track t.test_id) {
+              <li>{{ t.test_name }} ({{ t.test_code }})</li>
+            }
+          </ul>
+        </dd>
+        <dt>Ordering Doctor</dt>
+        <dd>{{ doctorName() }}</dd>
+        <dt>Priority</dt>
+        <dd class="priority-{{ form.priority }}">{{ form.priority }}</dd>
+        <dt>Clinical Indication</dt>
+        <dd>{{ form.clinicalIndication || '—' }}</dd>
+      </dl>
+      <div class="nav">
+        <button type="button" (click)="back()">Back</button>
+        <button type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Submitting...' : 'Submit Lab Order' }}
+        </button>
+      </div>
+    </section>
+  }
+</form>

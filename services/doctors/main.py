@@ -23,10 +23,12 @@ def on_startup() -> None:
 
 
 @app.get("/doctors", response_model=list[schemas.DoctorRead])
-def list_doctors(specialty: Optional[str] = None, db: Session = Depends(get_db)):
+def list_doctors(specialty: Optional[str] = None, role: Optional[str] = None, db: Session = Depends(get_db)):
     query = db.query(models.Doctor)
     if specialty:
         query = query.filter(models.Doctor.Specialty == specialty)
+    if role:
+        query = query.filter(models.Doctor.Role == role)
     return query.order_by(models.Doctor.DoctorId).all()
 
 

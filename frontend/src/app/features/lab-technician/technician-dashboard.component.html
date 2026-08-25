@@ -1,0 +1,104 @@
+<div class="header-row">
+  <h1>Lab Technician Dashboard</h1>
+  <label class="staff-select">
+    Acting as:
+    <select [ngModel]="labTech.staffId()" (ngModelChange)="onStaffChange($event)">
+      <option [ngValue]="null">Select technician...</option>
+      @for (doc of doctorService.doctors(); track doc.DoctorId) {
+        <option [ngValue]="doc.DoctorId">{{ doc.Name }} ({{ doc.Specialty }})</option>
+      }
+    </select>
+  </label>
+</div>
+
+@if (labTech.error()) {
+  <p class="error">{{ labTech.error() }}</p>
+}
+
+<div class="stat-cards">
+  <div class="stat-card">
+    <span class="stat-value">{{ pendingCollection().length }}</span>
+    <span class="stat-label">Awaiting sample collection</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-value">{{ samplesNeedingProcessing().length }}</span>
+    <span class="stat-label">Samples ready to process</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-value">{{ testsAwaitingResults().length }}</span>
+    <span class="stat-label">Tests awaiting results</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-value">{{ inProgressOrders().length }}</span>
+    <span class="stat-label">Orders in progress</span>
+  </div>
+</div>
+
+<div class="quick-links">
+  <a routerLink="/lab-tech/samples" class="link-card">
+    <strong>Sample Collection</strong>
+    <span>Track and mark samples as collected</span>
+  </a>
+  <a routerLink="/lab-tech/process" class="link-card">
+    <strong>Test Processing</strong>
+    <span>Start processing and enter results</span>
+  </a>
+  <a routerLink="/lab-tech/stats" class="link-card">
+    <strong>Lab Statistics</strong>
+    <span>View lab performance metrics</span>
+  </a>
+</div>
+
+<h2>Pending Sample Collection</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Order #</th>
+      <th>Patient</th>
+      <th>Priority</th>
+      <th>Tests</th>
+      <th>Ordered</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (order of pendingCollection(); track order.order_id) {
+      <tr>
+        <td>#{{ order.order_id }}</td>
+        <td>{{ patientName(order.patient_id) }}</td>
+        <td><span class="priority priority-{{ order.priority }}">{{ order.priority }}</span></td>
+        <td>{{ order.order_tests.length }}</td>
+        <td>{{ order.ordered_date | date: 'short' }}</td>
+      </tr>
+    } @empty {
+      <tr>
+        <td colspan="5">No orders awaiting sample collection.</td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<h2>Tests Awaiting Results</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Order #</th>
+      <th>Test</th>
+      <th>Specialty</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (entry of testsAwaitingResults(); track entry.orderTest.order_test_id) {
+      <tr>
+        <td>#{{ entry.order.order_id }}</td>
+        <td>{{ entry.orderTest.test.test_name }}</td>
+        <td>{{ entry.orderTest.test.specialty }}</td>
+        <td><span class="status status-{{ entry.orderTest.order_status }}">{{ entry.orderTest.order_status }}</span></td>
+      </tr>
+    } @empty {
+      <tr>
+        <td colspan="4">No tests currently awaiting results.</td>
+      </tr>
+    }
+  </tbody>
+</table>

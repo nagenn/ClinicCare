@@ -48,6 +48,10 @@
             <button (click)="complete(r)">Complete</button>
           }
           <a [routerLink]="['/documents']" [queryParams]="{ referralId: r.ReferralId }">Docs</a>
+          <a [routerLink]="['/lab/orders']" [queryParams]="{ referralId: r.ReferralId }">Labs</a>
+          <a [routerLink]="['/lab/orders/new']" [queryParams]="{ patientId: r.PatientId, referralId: r.ReferralId }">
+            Order Labs
+          </a>
         </td>
       </tr>
     } @empty {

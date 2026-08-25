@@ -11,9 +11,14 @@ export class DoctorService {
 
   doctors = signal<Doctor[]>([]);
 
-  search(specialty?: string): void {
-    this.http
-      .get<Doctor[]>(this.base, { params: specialty ? { specialty } : {} })
-      .subscribe((r) => this.doctors.set(r));
+  search(specialty?: string, role?: string): void {
+    const params: Record<string, string> = {};
+    if (specialty) {
+      params['specialty'] = specialty;
+    }
+    if (role) {
+      params['role'] = role;
+    }
+    this.http.get<Doctor[]>(this.base, { params }).subscribe((r) => this.doctors.set(r));
   }
 }

@@ -1,0 +1,100 @@
+@if (labService.selectedOrder(); as order) {
+  <a routerLink="/lab/orders" class="back">&larr; Back to Lab Orders</a>
+
+  <div class="header-row">
+    <h1>Lab Order #{{ order.order_id }}</h1>
+    <button class="print" (click)="print()">Print / Export</button>
+  </div>
+
+  <dl class="summary">
+    <dt>Patient</dt>
+    <dd>{{ patientName() }}</dd>
+    <dt>Status</dt>
+    <dd><span class="status status-{{ order.status }}">{{ order.status }}</span></dd>
+    <dt>Priority</dt>
+    <dd><span class="priority priority-{{ order.priority }}">{{ order.priority }}</span></dd>
+    <dt>Ordered</dt>
+    <dd>{{ order.ordered_date | slice: 0:10 }}</dd>
+    @if (order.referral_id) {
+      <dt>Referral</dt>
+      <dd>#{{ order.referral_id }}</dd>
+    }
+    @if (order.clinical_indication) {
+      <dt>Clinical Indication</dt>
+      <dd>{{ order.clinical_indication }}</dd>
+    }
+  </dl>
+
+  @if (labService.error()) {
+    <p class="error">{{ labService.error() }}</p>
+  }
+
+  @if (reviewError()) {
+    <p class="error">{{ reviewError() }}</p>
+  }
+
+  <h2>Results</h2>
+
+  <label class="reviewer-picker">
+    Reviewing Doctor
+    <select name="reviewerId" [(ngModel)]="reviewerId" [ngModelOptions]="{standalone: true}">
+      <option [value]="0" disabled>Select doctor...</option>
+      @for (d of doctorService.doctors(); track d.DoctorId) {
+        <option [value]="d.DoctorId">{{ d.Name }}</option>
+      }
+    </select>
+  </label>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Test</th>
+        <th>Status</th>
+        <th>Result</th>
+        <th>Normal Range</th>
+        <th>Flags</th>
+        <th>Reviewed</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (ot of order.order_tests; track ot.order_test_id) {
+        <tr>
+          <td>{{ ot.test.test_name }} ({{ ot.test.test_code }})</td>
+          <td><span class="status status-{{ ot.order_status }}">{{ ot.order_status }}</span></td>
+          @if (resultFor(ot); as result) {
+            <td [class.abnormal]="result.is_abnormal" [class.critical]="result.is_critical">
+              {{ result.result_value }} {{ ot.test.unit }}
+            </td>
+            <td>{{ rangeLabel(ot) }}</td>
+            <td>
+              @if (result.is_critical) {
+                <span class="flag flag-critical">Critical</span>
+              } @else if (result.is_abnormal) {
+                <span class="flag flag-abnormal">Abnormal</span>
+              } @else {
+                <span class="flag flag-normal">Normal</span>
+              }
+            </td>
+            <td>
+              @if (result.reviewed_date) {
+                Reviewed {{ result.reviewed_date | slice: 0:10 }}
+              } @else {
+                <span class="hint">Not reviewed</span>
+              }
+            </td>
+            <td>
+              @if (!result.reviewed_date) {
+                <button (click)="markReviewed(result)">Mark Reviewed</button>
+              }
+            </td>
+          } @else {
+            <td colspan="5" class="hint">No result submitted yet.</td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+} @else {
+  <p>Loading lab order…</p>
+}

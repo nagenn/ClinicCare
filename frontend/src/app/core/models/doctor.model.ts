@@ -4,4 +4,5 @@ export interface Doctor {
   Specialty: string;
   Department: string;
   ContactInfo: string;
+  Role: string;
 }

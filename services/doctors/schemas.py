@@ -6,6 +6,7 @@ class DoctorBase(BaseModel):
     Specialty: str
     Department: str
     ContactInfo: str
+    Role: str = "physician"
 
 
 class DoctorCreate(DoctorBase):

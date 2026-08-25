@@ -1,0 +1,56 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.9rem;
+}
+
+th {
+  color: #64748b;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.status {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-draft {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.status-placed {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.status-collected {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-processing {
+  background: #fde68a;
+  color: #92400e;
+}
+
+.status-completed {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+td a {
+  color: #2563eb;
+  font-size: 0.85rem;
+}

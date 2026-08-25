@@ -1,0 +1,182 @@
+.back {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  color: #2563eb;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.print {
+  padding: 0.45rem 0.9rem;
+  background: #e2e8f0;
+  color: #334155;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.3rem 1rem;
+  margin: 1rem 0 1.5rem;
+  font-size: 0.9rem;
+}
+
+.summary dt {
+  color: #64748b;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.summary dd {
+  margin: 0;
+}
+
+.error {
+  color: #dc2626;
+}
+
+.reviewer-picker {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: #334155;
+  margin-bottom: 0.75rem;
+}
+
+.reviewer-picker select {
+  padding: 0.4rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: top;
+}
+
+th {
+  color: #64748b;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+td.abnormal {
+  color: #b45309;
+  font-weight: 600;
+}
+
+td.critical {
+  color: #b91c1c;
+  font-weight: 700;
+}
+
+.status,
+.priority {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-draft,
+.status-ordered {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.status-placed {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.status-collected,
+.status-sample_collected {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-processing,
+.status-in_progress {
+  background: #fde68a;
+  color: #92400e;
+}
+
+.status-completed {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.priority-routine {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.priority-stat {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.flag {
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.flag-normal {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.flag-abnormal {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.flag-critical {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.hint {
+  color: #94a3b8;
+  font-size: 0.8rem;
+}
+
+button {
+  padding: 0.3rem 0.7rem;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 640px) {
+  .summary {
+    grid-template-columns: 1fr;
+  }
+}

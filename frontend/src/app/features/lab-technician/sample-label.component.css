@@ -1,0 +1,46 @@
+.label {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 0.75rem;
+  width: 260px;
+  background: #fff;
+}
+
+.barcode {
+  display: flex;
+  align-items: stretch;
+  gap: 1px;
+  height: 36px;
+  margin: 0.5rem 0;
+  background: #fff;
+}
+
+.bar {
+  background: #1e293b;
+  display: inline-block;
+}
+
+.label-code {
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  margin-bottom: 0.4rem;
+}
+
+.label-row {
+  font-size: 0.75rem;
+  color: #334155;
+  margin: 0.1rem 0;
+}
+
+.print-btn {
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid #2563eb;
+  background: #fff;
+  color: #2563eb;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}

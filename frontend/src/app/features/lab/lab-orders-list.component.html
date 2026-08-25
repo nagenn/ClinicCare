@@ -1,0 +1,59 @@
+<div class="header-row">
+  <h1>Lab Orders</h1>
+  <a
+    class="new-order"
+    [routerLink]="['/lab/orders/new']"
+    [queryParams]="{ patientId: patientId(), referralId: referralId() }"
+  >
+    + New Lab Order
+  </a>
+</div>
+
+<div class="filters">
+  @for (status of statusFilters; track status) {
+    <button [class.active]="activeFilter() === status" (click)="setFilter(status)">
+      {{ status }}
+    </button>
+  }
+</div>
+
+@if (labService.error()) {
+  <p class="error">{{ labService.error() }}</p>
+}
+
+@if (labService.loading()) {
+  <p class="loading">Loading lab orders…</p>
+} @else {
+  <table>
+    <thead>
+      <tr>
+        <th>Order #</th>
+        <th>Patient</th>
+        <th>Tests</th>
+        <th>Priority</th>
+        <th>Status</th>
+        <th>Ordered</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (o of filteredOrders(); track o.order_id) {
+        <tr>
+          <td>#{{ o.order_id }}</td>
+          <td>{{ patientName(o.patient_id) }}</td>
+          <td>{{ o.order_tests.length }} test(s)</td>
+          <td><span class="priority priority-{{ o.priority }}">{{ o.priority }}</span></td>
+          <td><span class="status status-{{ o.status }}">{{ o.status }}</span></td>
+          <td>{{ o.ordered_date | slice: 0:10 }}</td>
+          <td class="actions">
+            <a [routerLink]="['/lab/orders', o.order_id]">View</a>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="7">No lab orders in this status.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

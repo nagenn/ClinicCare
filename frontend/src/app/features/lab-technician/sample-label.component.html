@@ -1,0 +1,15 @@
+<div class="label" [id]="printTargetId()">
+  <div class="barcode">
+    @for (width of barWidths(); track $index) {
+      <span class="bar" [style.width.px]="width * 2"></span>
+    }
+  </div>
+  <div class="label-code">{{ sample.sample_label ?? 'PENDING' }}</div>
+  <div class="label-row"><strong>Order:</strong> #{{ order.order_id }}</div>
+  <div class="label-row"><strong>Patient:</strong> {{ patientName ?? ('Patient #' + order.patient_id) }}</div>
+  <div class="label-row"><strong>Sample type:</strong> {{ sample.sample_type }}</div>
+  <div class="label-row">
+    <strong>Collected:</strong> {{ sample.collection_date ? (sample.collection_date | date: 'medium') : 'Not collected' }}
+  </div>
+</div>
+<button type="button" class="print-btn" (click)="print()">Print label</button>

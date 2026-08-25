@@ -1,0 +1,124 @@
+<h1>Sample Collection</h1>
+
+<div class="toolbar">
+  <button
+    type="button"
+    class="bulk-btn"
+    [disabled]="selectedOrderIds().size === 0"
+    (click)="openBulkCollectModal()"
+  >
+    Collect Selected ({{ selectedOrderIds().size }})
+  </button>
+</div>
+
+<h2>Awaiting Collection</h2>
+<table>
+  <thead>
+    <tr>
+      <th>
+        <input
+          type="checkbox"
+          [checked]="pendingOrders().length > 0 && selectedOrderIds().size === pendingOrders().length"
+          (change)="toggleSelectAll()"
+        />
+      </th>
+      <th>Order #</th>
+      <th>Patient</th>
+      <th>Priority</th>
+      <th>Tests</th>
+      <th>Ordered</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (order of pendingOrders(); track order.order_id) {
+      <tr>
+        <td><input type="checkbox" [checked]="isSelected(order.order_id)" (change)="toggleSelected(order.order_id)" /></td>
+        <td>#{{ order.order_id }}</td>
+        <td>{{ patientName(order.patient_id) }}</td>
+        <td><span class="priority priority-{{ order.priority }}">{{ order.priority }}</span></td>
+        <td>{{ order.order_tests.length }}</td>
+        <td>{{ order.ordered_date | date: 'short' }}</td>
+        <td><button type="button" (click)="openCollectModal(order.order_id)">Mark Collected</button></td>
+      </tr>
+    } @empty {
+      <tr>
+        <td colspan="7">No orders awaiting sample collection.</td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+@if (sessionCollectedEntries().length > 0) {
+  <h2>Just Collected</h2>
+  <div class="label-grid">
+    @for (entry of sessionCollectedEntries(); track entry.sample.sample_id) {
+      <app-sample-label [order]="entry.order" [sample]="entry.sample" [patientName]="patientName(entry.order.patient_id)" />
+    }
+  </div>
+}
+
+<h2>Previously Collected Orders</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Order #</th>
+      <th>Patient</th>
+      <th>Status</th>
+      <th>Tests</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (order of alreadyCollectedOrders(); track order.order_id) {
+      <tr>
+        <td>#{{ order.order_id }}</td>
+        <td>{{ patientName(order.patient_id) }}</td>
+        <td><span class="status status-{{ order.status }}">{{ order.status }}</span></td>
+        <td>{{ order.order_tests.length }}</td>
+      </tr>
+    } @empty {
+      <tr>
+        <td colspan="4">No collected orders yet.</td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+@if (modalOrderIds(); as ids) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h2>{{ ids.length === 1 ? 'Collect Sample — Order #' + ids[0] : 'Collect ' + ids.length + ' Samples' }}</h2>
+
+      @if (formError()) {
+        <p class="error">{{ formError() }}</p>
+      }
+
+      <label>
+        Collection date/time
+        <input type="datetime-local" [ngModel]="collectionDateTime()" (ngModelChange)="collectionDateTime.set($event)" />
+      </label>
+
+      <label>
+        Collected by
+        <select [ngModel]="collectedBy()" (ngModelChange)="collectedBy.set($event)">
+          <option [ngValue]="null">Select technician/doctor...</option>
+          @for (doc of doctorService.doctors(); track doc.DoctorId) {
+            <option [ngValue]="doc.DoctorId">{{ doc.Name }} ({{ doc.Specialty }})</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        Notes
+        <textarea rows="3" [ngModel]="notes()" (ngModelChange)="notes.set($event)" placeholder="Optional collection notes..."></textarea>
+      </label>
+
+      <div class="modal-actions">
+        <button type="button" class="secondary" (click)="closeModal()">Cancel</button>
+        <button type="button" [disabled]="submitting()" (click)="submitCollection()">
+          {{ submitting() ? 'Saving...' : 'Confirm Collection' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

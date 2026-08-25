@@ -11,3 +11,4 @@ class Doctor(Base):
     Specialty = Column(String, nullable=False, index=True)
     Department = Column(String, nullable=False)
     ContactInfo = Column(String, nullable=False)
+    Role = Column(String, nullable=False, default="physician", server_default="physician")

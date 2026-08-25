@@ -1,0 +1,99 @@
+<h1>Test Processing</h1>
+
+@if (actionError()) {
+  <p class="error">{{ actionError() }}</p>
+}
+
+<div class="toolbar">
+  <button type="button" class="bulk-btn" [disabled]="selectedTestIds().size === 0" (click)="startSelected()">
+    Start Processing Selected ({{ selectedTestIds().size }})
+  </button>
+</div>
+
+<h2>Ready to Process (Sample Collected)</h2>
+<table>
+  <thead>
+    <tr>
+      <th>
+        <input
+          type="checkbox"
+          [checked]="readyToStart().length > 0 && selectedTestIds().size === readyToStart().length"
+          (change)="toggleSelectAll()"
+        />
+      </th>
+      <th>Order #</th>
+      <th>Patient</th>
+      <th>Test</th>
+      <th>Specialty</th>
+      <th>Progress</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (entry of readyToStart(); track entry.orderTest.order_test_id) {
+      <tr>
+        <td>
+          <input
+            type="checkbox"
+            [checked]="isSelected(entry.orderTest.order_test_id)"
+            (change)="toggleSelected(entry.orderTest.order_test_id)"
+          />
+        </td>
+        <td>#{{ entry.order.order_id }}</td>
+        <td>{{ patientName(entry.order.patient_id) }}</td>
+        <td>{{ entry.orderTest.test.test_name }}</td>
+        <td>{{ entry.orderTest.test.specialty }}</td>
+        <td class="muted">{{ orderProgress(entry.order) }}</td>
+        <td>
+          <button type="button" (click)="startProcessing(entry)">Start Processing</button>
+        </td>
+      </tr>
+    } @empty {
+      <tr>
+        <td colspan="7">No tests ready for processing.</td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<h2>In Progress</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Order #</th>
+      <th>Patient</th>
+      <th>Test</th>
+      <th>Specialty</th>
+      <th>Progress</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (entry of inProgress(); track entry.orderTest.order_test_id) {
+      <tr>
+        <td>#{{ entry.order.order_id }}</td>
+        <td>{{ patientName(entry.order.patient_id) }}</td>
+        <td>{{ entry.orderTest.test.test_name }}</td>
+        <td>{{ entry.orderTest.test.specialty }}</td>
+        <td class="muted">{{ orderProgress(entry.order) }}</td>
+        <td>
+          <button type="button" (click)="openResultEntry(entry)">Enter Result</button>
+        </td>
+      </tr>
+    } @empty {
+      <tr>
+        <td colspan="6">No tests currently in progress.</td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+@if (resultEntryTarget(); as target) {
+  <app-result-entry
+    [order]="target.order"
+    [orderTest]="target.orderTest"
+    [patientName]="patientName(target.order.patient_id)"
+    (closed)="closeResultEntry()"
+    (submitted)="onResultSubmitted()"
+  />
+}
